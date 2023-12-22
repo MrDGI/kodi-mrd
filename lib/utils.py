@@ -30,10 +30,13 @@ def getDate(_hour, _min):
 def dateDif(_dEnd):
 	return _dEnd - dateTime()
 
-def getWeb(_url, _type='JSON'):
-	getWeb(_url, '', _type)
+def getHTML(_url, _token=''):
+	return getWeb(_url, 'HTML')
 
-def getWeb(_url, _token='', _type='JSON'):
+def getJSON(_url, _token=''):
+	return getWeb(_url, 'JSON', _token)
+
+def getWeb(_url, _type='JSON', _token=''):
 	try:
 		if _token == '':
 			req = requests.get(_url, verify=True)

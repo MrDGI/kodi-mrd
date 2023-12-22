@@ -8,7 +8,7 @@ class Dmax:
 
 	def __getToken(self):
 		try:
-			oToken = utils.getWeb('https://public.aurora.enhanced.live/token?realm=es')
+			oToken = utils.getJSON('https://public.aurora.enhanced.live/token?realm=es')
 			token = oToken['data']['attributes']['token']
 			return token
 		except:
@@ -16,7 +16,7 @@ class Dmax:
 
 	def __getLastPrograms(self):
 		try:
-			sChannel = utils.getWeb('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria', 'HTML' )
+			sChannel = utils.getHTML('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria')
 			programList = utils.findAll('<ul class="programas">(.*?)</ul>', sChannel)
 			return programList
 		except:
@@ -71,7 +71,7 @@ class Dmax:
 
 	def getStreaming(self):
 		try:
-			oMedia = utils.getWeb('https://public.aurora.enhanced.live/playback/channelPlaybackInfo/1?usePreAuth=true', self._token)
+			oMedia = utils.getJSON('https://public.aurora.enhanced.live/playback/channelPlaybackInfo/1?usePreAuth=true', self._token)
 			oStream = oMedia['data']['attributes']['streaming'][0]
 			return oStream
 		except:
