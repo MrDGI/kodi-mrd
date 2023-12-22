@@ -16,7 +16,7 @@ class Dmax:
 
 	def __getLastPrograms(self):
 		try:
-			sChannel = utils.getWeb('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria', '', 'HTML' )
+			sChannel = utils.getWeb('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria', 'HTML' )
 			programList = utils.findAll('<ul class="programas">(.*?)</ul>', sChannel)
 			return programList
 		except:
@@ -64,7 +64,7 @@ class Dmax:
 			descSinopsis = "[/COLOR]\n[B][COLOR white]" + sinopsis + "[/COLOR][/B]"
 			description =  descTitle + descTime + descSinopsis
 
-			landscape = {'icon': image, 'title': hTitle, 'desc': description, 'timeout': 10}
+			landscape = {'icon': image, 'title': hTitle, 'desc': description, 'timeout': resto}
 			return landscape
 		except:
 			raise Exception('dmax -> Landscape --- Error')

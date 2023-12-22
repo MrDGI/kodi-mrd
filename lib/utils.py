@@ -30,6 +30,9 @@ def getDate(_hour, _min):
 def dateDif(_dEnd):
 	return _dEnd - dateTime()
 
+def getWeb(_url, _type='JSON'):
+	getWeb(_url, '', _type)
+
 def getWeb(_url, _token='', _type='JSON'):
 	try:
 		if _token == '':
