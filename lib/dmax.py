@@ -68,6 +68,31 @@ class Dmax:
 			return landscape
 		except:
 			raise Exception('dmax -> Landscape --- Error')
+		
+	def getSeries(self):
+		try:
+			oSeriesContent = utils.getJSON('https://it-api.loma-cms.com/feloma/page/series/?environment=dmaxspain&v=2')
+			oSeriesCollection = oSeriesContent['blocks'][0]['items']
+			return oSeriesCollection
+		except:
+			raise Exception('dmax -> getSeries --- Error')
+		
+	def getEpisodes(self, _slug):
+		try:
+			oEpisodesContent = utils.getJSON('https://it-api.loma-cms.com/feloma/page/' + _slug + '/?environment=dmaxspain&parent_slug=series&v=2')
+			oEpisodesCollection = oEpisodesContent['blocks'][1]['items']
+			return oEpisodesCollection
+		except:
+			raise Exception('dmax -> getEpisodes --- Error')
+		
+	def getEpisode(self, _episode):
+		try:
+			data = {"videoId":str(_episode)}
+			oMedia = utils.postWeb('https://public.aurora.enhanced.live/playback/v3/videoPlaybackInfo', data, self._token)
+			oStream = oMedia['data']['attributes']['streaming'][0]
+			return oStream
+		except:
+			raise Exception('dmax -> getEpisode --- Error')
 
 	def getStreaming(self):
 		try:

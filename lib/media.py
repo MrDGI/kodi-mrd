@@ -10,7 +10,7 @@ class Media:
 	def __init__(self, oMedia):
 		self._player = xbmc.Player()
 		self._media = oMedia
-		self._landscape = self._media.getLandscape()
+		self._landscape = oMedia.getLandscape()
 
 	def __call__(self):
 		player = self._player
@@ -48,9 +48,13 @@ class Media:
 			if player.isPlaying():
 				self.__refeshLandscape()
 
-	def play(self, autoRefresh=1):
+	def play(self, _episode=''):
 		try:
-			stream = self._media.getStreaming()
+			if _episode == '':
+				stream = self._media.getStreaming()
+			else:
+				stream = self._media.getEpisode(_episode)
+			
 			data = {'url': '', 'type': ''}
 			if len(stream) >= 2:
 				data = {'url': stream['url'], 'type': stream['type']}
@@ -70,7 +74,7 @@ class Media:
 			playlist.clear()
 			playlist.add(streaming.getPath(), self.__getLayout() )
 			play = player.play(playlist)
-			if autoRefresh:
+			if _episode == '':
 				self.__refreshPlay()
 			return play
 		except:

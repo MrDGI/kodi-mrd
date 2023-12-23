@@ -1,6 +1,6 @@
 import re
+import json
 import requests
-import threading
 from requests.auth import AuthBase
 from datetime import datetime, timedelta
 
@@ -31,12 +31,12 @@ def dateDif(_dEnd):
 	return _dEnd - dateTime()
 
 def getHTML(_url, _token=''):
-	return getWeb(_url, 'HTML')
+	return __getWeb(_url, 'HTML')
 
 def getJSON(_url, _token=''):
-	return getWeb(_url, 'JSON', _token)
+	return __getWeb(_url, 'JSON', _token)
 
-def getWeb(_url, _type='JSON', _token=''):
+def __getWeb(_url, _type='JSON', _token=''):
 	try:
 		if _token == '':
 			req = requests.get(_url, verify=True)
@@ -51,6 +51,14 @@ def getWeb(_url, _type='JSON', _token=''):
 		return web_response
 	except:
 		raise Exception('Unknown error on utils > getWeb')
+	
+def postWeb(_url, _data='', _token=''):
+	try:
+		headers = {'Content-type': 'application/json'}
+		req = requests.post(_url, data=json.dumps(_data), verify=True, headers=headers, auth=Authenticator(_token) )
+		return req.json()
+	except:
+		raise Exception('Unknown error on utils > postWeb')
 
 def findAll(pattern, srchText):
 	try:
