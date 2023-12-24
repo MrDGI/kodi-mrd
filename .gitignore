@@ -1,14 +1,1 @@
-﻿################################################################################
-# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
-################################################################################
-
-/.vs
-/.gitignore
-/LICENSE.txt
-/plugin.video.dmaxEsp/addon.xml
-/plugin.video.dmaxEsp/lib/dmax.py
-/plugin.video.dmaxEsp/lib/media.py
-/plugin.video.dmaxEsp/lib/utils.py
-/plugin.video.dmaxEsp/main.py
-/plugin.video.dmaxEsp/src/fanart.jpg
-/plugin.video.dmaxEsp/src/icon.png
+﻿/.vs

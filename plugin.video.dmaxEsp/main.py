@@ -32,7 +32,7 @@ def main(_episode):
 					
 			oMedia.play(_episode)
 			
-	except ValueError as e:
+	except Exception as e:
 		media.log(e)
 #"1647"
 main()

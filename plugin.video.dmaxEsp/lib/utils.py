@@ -4,7 +4,7 @@ import requests
 from requests.auth import AuthBase
 from datetime import datetime, timedelta
 
-class Authenticator(AuthBase):
+class __Authenticator(AuthBase):
     def __init__(self, token):
         self.token = token
 
@@ -41,7 +41,7 @@ def __getWeb(_url, _type='JSON', _token=''):
 		if _token == '':
 			req = requests.get(_url, verify=True)
 		else:
-			req = requests.get(_url, verify=True, auth=Authenticator(_token) )
+			req = requests.get(_url, verify=True, auth=__Authenticator(_token) )
 
 		if _type == 'JSON':
 			web_response = req.json()
