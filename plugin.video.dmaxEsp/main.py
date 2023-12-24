@@ -1,14 +1,15 @@
 from lib import dmax
 from lib import media
+from lib import nav
 
-def main(_episode):
+def main(_episode=''):
 	try:
 		oDmax = dmax.Dmax()
 		oMedia = media.Media(oDmax)
 
+
 		if _episode == '':
-			oMedia.play()
-			
+			oMedia.play()	
 		else:
 			
 			series = oDmax.getSeries()
@@ -35,4 +36,9 @@ def main(_episode):
 	except Exception as e:
 		media.log(e)
 #"1647"
-main()
+#main()
+
+oDmax = dmax.Dmax()
+oMedia = media.Media(oDmax)
+menu = nav.nav(oDmax, oMedia)
+menu.start()
