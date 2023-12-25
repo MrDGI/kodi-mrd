@@ -48,12 +48,13 @@ class Media:
 			if player.isPlaying():
 				self.__refeshLandscape()
 
-	def play(self, _episode=''):
+	def play(self, _episode='', _title='', _desc='', _icon=''):
 		try:
 			if _episode == '':
 				stream = self._media.getStreaming()
 			else:
 				stream = self._media.getEpisode(_episode)
+				self._landscape = {'title': '[B][COLOR yellow]' + _title + '[/COLOR][/B]', 'desc':'[B][COLOR white]'+_desc+'[/COLOR][/B]', 'icon': _icon}
 			
 			data = {'url': '', 'type': ''}
 			if len(stream) >= 2:

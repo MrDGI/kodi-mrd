@@ -55,7 +55,7 @@ def __getWeb(_url, _type='JSON', _token=''):
 def postWeb(_url, _data='', _token=''):
 	try:
 		headers = {'Content-type': 'application/json'}
-		req = requests.post(_url, data=json.dumps(_data), verify=True, headers=headers, auth=Authenticator(_token) )
+		req = requests.post(_url, data=json.dumps(_data), verify=True, headers=headers, auth=__Authenticator(_token) )
 		return req.json()
 	except:
 		raise Exception('Unknown error on utils > postWeb')
@@ -63,6 +63,9 @@ def postWeb(_url, _data='', _token=''):
 def findAll(pattern, srchText):
 	try:
 		content = re.compile(pattern, re.DOTALL).findall(srchText)
-		return content[0]
+		resp=[]
+		if (len(content) > 0):
+			resp = content[0]
+		return resp
 	except:
 		raise Exception('Unknown error on utils > findAll')

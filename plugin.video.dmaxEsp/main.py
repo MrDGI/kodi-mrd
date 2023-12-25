@@ -1,44 +1,46 @@
+import sys
+from lib import nav
 from lib import dmax
 from lib import media
-from lib import nav
+from urllib.parse import parse_qs
 
-def main(_episode=''):
+def main():
 	try:
-		oDmax = dmax.Dmax()
-		oMedia = media.Media(oDmax)
+		args = parse_qs(sys.argv[2][1:])
+		oOptions = dmax.Dmax()
+		oMedia = media.Media(oOptions)
+		oMenu = nav.nav(oOptions, oMedia)
+		type = None
 
+		if len(args) > 0:
+			type = args['action']
 
-		if _episode == '':
-			oMedia.play()	
-		else:
+		if type is None:
+			oMenu.start()
+
+		elif type[0] == 'seasons':
+			slug = str(args['slug'][0])
+			oMenu.loadSeasions(slug)
+
+		elif type[0] == 'episodes':
+			slug = str(args['slug'][0])
+			season = str(args['season'][0])
+			oMenu.loadEpisodes(slug, season)
+
+		elif type[0] == 'episode':
+			slug = str(args['slug'][0])
+			title = str(args['title'][0])
+			desc = str(args['desc'][0])
+			icon = str(args['icon'][0])
+			oMedia.play(slug, title, desc, icon)
+
+		elif type[0] == 'live':
+			oMedia.play()
 			
-			series = oDmax.getSeries()
-			for serie in series:
-				title = serie['title']
-				subtitle = serie['subtitle']
-				slug = serie['slug']
-				episodes = oDmax.getEpisodes(slug)
-				for episode in episodes:
-					sid = episode['id']
-					title = episode['title']
-					desc = episode['description']
-					temporada = episode['seasonNumber']
-					episodio = episode['episodeNumber']
-					if episode['poster']:
-						icon = episode['poster']['src']
+		elif type[0] == 'guide':
+			oMenu.loadGuide()
 
-				landscape = serie['metaMedia'][0]['media']['url']
-				portrait = serie['metaMedia'][1]['media']['url']
-					
-					
-			oMedia.play(_episode)
-			
+
 	except Exception as e:
 		media.log(e)
-#"1647"
-#main()
-
-oDmax = dmax.Dmax()
-oMedia = media.Media(oDmax)
-menu = nav.nav(oDmax, oMedia)
-menu.start()
+main()

@@ -1,4 +1,6 @@
 from lib import utils
+import xbmc
+
 
 class Dmax:
 	def __init__(self):
@@ -21,28 +23,18 @@ class Dmax:
 			return programList
 		except:
 			raise Exception('dmax -> getLastPrograms --- Error')
+		
+	def __getItemObject(self, _item):
 
-	#def __getProgramItems(self, reload=0):
-		#if reload:
-			#self.__getLastPrograms()
-		#self.programItems = utils.findAll('<li class="programa">(.*?)</li>', self._programList)
+			incTimeRate = 120 # Represents the time rate to increase (on seconds) before consulting the guide again			
 
-	def __getLandscape(self, reload=1):
-		try:
-			if reload:
-				self._programList = self.__getLastPrograms()
-
-			programNow = utils.findAll('<li class="programa now">(.*?)</li>', self._programList)
-
-			incTimeRate = 120 # Represents the time rate to increase (on seconds) before consulting the guide again
-
-			hour = utils.findAll('<span class="tiempo">(.*?)</span>', programNow)
-			time = utils.findAll('<span class="duracion">(.*?)</span>', programNow)
-			title = utils.findAll('<h3>(.*?)</h3>', programNow)
-			episode = utils.findAll('<p class="episode">(.*?)</p>', programNow)
+			hour = utils.findAll('<span class="tiempo">(.*?)</span>', _item)
+			time = utils.findAll('<span class="duracion">(.*?)</span>', _item)
+			title = utils.findAll('<h3>(.*?)</h3>', _item)
+			episode = utils.findAll('<p class="episode">(.*?)</p>', _item)
 			hTitle  = title + " - " + episode
-			sinopsis = utils.findAll('<div class="sinopsis">(.*?)</div>', programNow)
-			pegi = utils.findAll('<div class="ico_edad calif_(.*?)" ', programNow)
+			sinopsis = utils.findAll('<div class="sinopsis">(.*?)</div>', _item)
+			pegi = utils.findAll('<div class="ico_edad calif_(.*?)" ', _item)
 
 			image = "https://d3ikde5w5w939x.cloudfront.net/images/ico_calf_" + str(pegi).lower() + ".gif"
 
@@ -60,11 +52,34 @@ class Dmax:
 			resto = (utils.dateDif(endProgram)).seconds + incTimeRate
 
 			descTitle = "[B][COLOR yellow]" + title + "[/COLOR] - [COLOR blue]" + episode + "[/COLOR][/B]" #+ str(resto)
-			descTime = "\n[COLOR grey]" + str(fInitProgram) + " · " + str(fEndProgram) + " \t(" + time + ")"
-			descSinopsis = "[/COLOR]\n[B][COLOR white]" + sinopsis + "[/COLOR][/B]"
+			descTime = "\n[COLOR grey]" + str(fInitProgram) + " · " + str(fEndProgram) + " \t(" + time + ")[/COLOR]"
+			descSinopsis = "\n[B][COLOR white]" + sinopsis + "[/COLOR][/B]"
 			description =  descTitle + descTime + descSinopsis
 
-			landscape = {'icon': image, 'title': hTitle, 'desc': description, 'timeout': resto}
+			return {'icon': image, 'title': hTitle, 'desc': description, 'timeout': resto}
+
+	def __getProgramItems(self, reload=0):
+		if reload:
+			self._programList = self.__getLastPrograms()
+		self.programItems = utils.findAll('<li class="programa">(.*?)</li>', self._programList)
+  
+		programList = []
+		xbmc.log("EEEE "+ str(self.programItems))
+		for program in self.programItems:
+			if (len(program[0]) > 1):
+				landscape = self.__getItemObject(program)
+				xbmc.log("EEEE "+ landscape)
+				programList.append(landscape)
+		return programList
+
+	def __getLandscape(self, reload=1):
+		try:
+			if reload:
+				self._programList = self.__getLastPrograms()
+
+			programNow = utils.findAll('<li class="programa now">(.*?)</li>', self._programList)
+			landscape = self.__getItemObject(programNow)
+
 			return landscape
 		except:
 			raise Exception('dmax -> Landscape --- Error')
@@ -108,3 +123,7 @@ class Dmax:
 
 	def getLandscape(self):
 		return self._landscape
+
+	def getProgramList(self):
+		return self.__getProgramItems(0)
+		
