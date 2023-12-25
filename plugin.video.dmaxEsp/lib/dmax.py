@@ -1,6 +1,4 @@
 from lib import utils
-import xbmc
-
 
 class Dmax:
 	def __init__(self):
@@ -61,15 +59,12 @@ class Dmax:
 	def __getProgramItems(self, reload=0):
 		if reload:
 			self._programList = self.__getLastPrograms()
-		self.programItems = utils.findAll('<li class="programa">(.*?)</li>', self._programList)
-  
+		programItems = utils.findAll('<li class="programa">(.*?)</li>', self._programList, True)
+
 		programList = []
-		xbmc.log("EEEE "+ str(self.programItems))
-		for program in self.programItems:
-			if (len(program[0]) > 1):
-				landscape = self.__getItemObject(program)
-				xbmc.log("EEEE "+ landscape)
-				programList.append(landscape)
+		for program in programItems:
+			landscape = self.__getItemObject(program)
+			programList.append(landscape)
 		return programList
 
 	def __getLandscape(self, reload=1):

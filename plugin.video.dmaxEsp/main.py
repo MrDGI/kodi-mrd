@@ -9,7 +9,7 @@ def main():
 		args = parse_qs(sys.argv[2][1:])
 		oOptions = dmax.Dmax()
 		oMedia = media.Media(oOptions)
-		oMenu = nav.nav(oOptions, oMedia)
+		oMenu = nav.nav(oOptions)
 		type = None
 
 		if len(args) > 0:
@@ -39,7 +39,6 @@ def main():
 			
 		elif type[0] == 'guide':
 			oMenu.loadGuide()
-
 
 	except Exception as e:
 		media.log(e)

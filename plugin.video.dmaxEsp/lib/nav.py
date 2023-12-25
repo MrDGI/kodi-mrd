@@ -5,9 +5,8 @@ import sys
 import urllib.parse as urllib
 
 class nav:
-	def __init__(self, oOptions, oMedia):
+	def __init__(self, oOptions):
 		self._oOptions = oOptions
-		self._oMedia = oMedia
 		self._urlBase = sys.argv[0]
 		self._handle = int(sys.argv[1])
          
@@ -29,24 +28,25 @@ class nav:
 	def __buildUrl(self, _query):
 		return self._urlBase + '?' + urllib.urlencode(_query)
 	
+	def __loadOptGuide(self):
+		internalUrl = self.__buildUrl( {'action': 'guide', 'slug': '' } )
+		title = "[Guia] (Guide)"
+		self.__addItemMenu(title, '', internalUrl, 'false', False)
+
 	def __loadGuide(self):
 		programList = self._oOptions.getProgramList()
 		for program in programList:
 			title = program['title']
 			icon = program['icon']
-			desc = program['desc']	
-			self.__addItemMenu(title, icon, '', 'false', True)
-
-	def __loadOptGuide(self):
-		internalUrl = self.__buildUrl( {'action': 'guide', 'slug': '' } )
-		title = "[Gia] (Guide)"
-		self.__addItemMenu(title, '', internalUrl, 'false', False)
+			desc = program['desc']
+			internalUrl = self.__buildUrl({})
+			self.__addItemMenu(title, icon, internalUrl, 'false', False)
 
 	def __loadOptLive(self):
 		landscape = self._oOptions.getLandscape()
 		title = '[Directo] (Live)' + landscape['title']
 		icon = landscape['icon']
-		internalUrl = self.__buildUrl( {'action': 'live', 'slug': '' } )
+		internalUrl = self.__buildUrl( {'action': 'live'} )
 		self.__addItemMenu(title, icon, internalUrl, 'false', False)
 
 	def __loadSeries(self):
@@ -91,13 +91,9 @@ class nav:
 				internalUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
 				self.__addItemMenu(nTitle, icon, internalUrl, 'false', False)
 
-	def loadGuide(self):
-		self.__loadGuide()
-		xbmcplugin.endOfDirectory(self._handle)
-
 	def start(self):
-		#self.__loadOptGuide()
 		self.__loadOptLive()
+		self.__loadOptGuide()
 		self.__loadSeries()
 		xbmcplugin.endOfDirectory(self._handle)
 
@@ -108,5 +104,7 @@ class nav:
 	def loadEpisodes(self, _slug, _season):
 		self.__loadEpisodes(_slug, _season)
 		xbmcplugin.endOfDirectory(self._handle)
-    
-#xbmcplugin.addDirectoryItems()
+
+	def loadGuide(self):
+		self.__loadGuide()
+		xbmcplugin.endOfDirectory(self._handle)

@@ -60,12 +60,15 @@ def postWeb(_url, _data='', _token=''):
 	except:
 		raise Exception('Unknown error on utils > postWeb')
 
-def findAll(pattern, srchText):
+def findAll(pattern, srchText, getList=False):
 	try:
-		content = re.compile(pattern, re.DOTALL).findall(srchText)
+		content = re.findall(pattern, srchText, re.DOTALL)
 		resp=[]
 		if (len(content) > 0):
-			resp = content[0]
+			if getList:
+				resp = content
+			else:
+				resp = content[0]
 		return resp
 	except:
 		raise Exception('Unknown error on utils > findAll')
