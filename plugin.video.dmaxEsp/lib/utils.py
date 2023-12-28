@@ -18,7 +18,7 @@ def rmSpecialCharts(_text):
 	return re.sub(r'\W+', '', _text)
 
 def tFrm(_text):
-	_text = _text.encode('utf-8', 'ignore').decode('utf-8')
+	_text = _text.encode('utf-8', 'ignore').decode('utf-8').strip()
 	_text = str(_text)
 	return _text
 

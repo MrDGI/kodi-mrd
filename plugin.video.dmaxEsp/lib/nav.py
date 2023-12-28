@@ -56,7 +56,7 @@ class nav:
 			self._series = self._oOptions.getSeries()
 		for serie in self._series:
 			title = self.__tFrm(serie['title'])
-			if title == _title:
+			if title in _title:
 				tSeri = title
 				slug = str(serie['slug'])
 				break
@@ -70,7 +70,7 @@ class nav:
 				eTitle = episode['title']
 				efTitle = self.__tFrm(eTitle)
 				desc = episode['description']
-				if efTitle == _desc:
+				if efTitle in _desc:
 					epiNumber = episode['episodeNumber']
 					season = episode['seasonNumber']
 					nTitle = "[T{0}E{1}] {2}".format(season, epiNumber, eTitle)

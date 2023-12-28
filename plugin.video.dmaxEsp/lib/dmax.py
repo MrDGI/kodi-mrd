@@ -41,8 +41,8 @@ class Dmax:
 
 			hour = utils.findAll('<span class="tiempo">(.*?)</span>', _item)
 			time = utils.findAll('<span class="duracion">(.*?)</span>', _item)
-			title = utils.tFrm( utils.findAll('<h3>(.*?)</h3>', _item).strip() )
-			episode = utils.tFrm( utils.findAll('<p class="episode">(.*?)</p>', _item).strip() )
+			title = utils.tFrm( utils.findAll('<h3>(.*?)</h3>', _item) )
+			episode = utils.tFrm( utils.findAll('<p class="episode">(.*?)</p>', _item) )
 			hTitle  = title + " - " + episode
 			sinopsis = utils.findAll('<div class="sinopsis">(.*?)</div>', _item)
 			pegi = utils.findAll('<div class="ico_edad calif_(.*?)" ', _item)
