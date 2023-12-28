@@ -115,7 +115,7 @@ class nav:
 
 	def __loadOptLive(self):
 		landscape = self._oOptions.getLandscape()
-		title = '[Directo] (Live)' + landscape['title']
+		title = '[Directo] (Live) ' + landscape['title']
 		icon = landscape['icon']
 		openUrl = self.__buildUrl( {'action': 'live'} )
 		self.__addItemMenu(title,'', icon, '', openUrl, 'false', False)
