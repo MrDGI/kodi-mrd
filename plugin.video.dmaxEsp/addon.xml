@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.4" provider-name="Mr.D">
+<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.5" provider-name="Mr.D">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="script.module.requests" version="2.31.0" />
@@ -19,11 +19,14 @@
 		<mainsource></mainsource>
 		<source></source>
 		<assets>
-			<icon>src/icon.png</icon>
-			<fanart>src/fanart.jpg</fanart>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
 		</assets>
 		<news>
-[B][COLOR orangered]Version 0.0.4  (25.12.2023)[/COLOR][/B]
+[B][COLOR orangered]Version 0.0.5  (28.12.2023)[/COLOR][/B]
+- Agregada guia interactiva con contenidos.
+- Mejoras y correcciones para el tratado de informacion
+[COLOR yellow]Version 0.0.4  (25.12.2023)[/COLOR]
 - Agregados episodios y temporadas.
 [COLOR yellow]Version 0.0.3  (22.12.2023)[/COLOR]
 - Refactorizado para POO.

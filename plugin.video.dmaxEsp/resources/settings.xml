@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="Guide options">
+		<setting label="Auto search programs" type="bool" id="searchGuidePrograms" default="true" />
+		<setting label="Days old to load guide" type="slider" id="guideOldDates" default="5" range="5,5,30" option="int" />
+	</category>
+</settings>

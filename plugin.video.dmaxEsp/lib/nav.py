@@ -1,17 +1,24 @@
-import xbmc
 import xbmcgui
 import xbmcplugin
 import sys
 import urllib.parse as urllib
+from lib import utils
 
 class nav:
 	def __init__(self, oOptions):
 		self._oOptions = oOptions
 		self._urlBase = sys.argv[0]
 		self._handle = int(sys.argv[1])
+		self._series = ''
+		self._slug = ''
+		self._episodes = ''
          
-	def __addItemMenu(self, _label, _thumbnail, _url, _isPlayable='false', _isFolder=False):
-		newItem = xbmcgui.ListItem(_label)
+	def __addItemMenu(self, _title, _desc, _thumbnail, _url, _isPlayable='false', _isFolder=False):
+		if _title is None:
+			_title = _desc.replace('\n', '')
+		if _title is not None and _desc is not None:
+			_title = _title + ": " + _desc.replace('\n', '')
+		newItem = xbmcgui.ListItem(_title)
 		newItem.setArt({ 'thumb': _thumbnail})
 		newItem.setProperty('IsPlayable', _isPlayable)
 		newItem.setIsFolder(_isFolder)
@@ -29,36 +36,100 @@ class nav:
 		return self._urlBase + '?' + urllib.urlencode(_query)
 	
 	def __loadOptGuide(self):
-		internalUrl = self.__buildUrl( {'action': 'guide', 'slug': '' } )
 		title = "[Guia] (Guide)"
-		self.__addItemMenu(title, '', internalUrl, 'false', False)
+		openUrl = self.__buildUrl( {'action': 'guide'} )
+		self.__addItemMenu(title, '', '', openUrl, 'false', True)
 
-	def __loadGuide(self):
-		programList = self._oOptions.getProgramList()
+	def __tFrm(self, _text):
+		_text = str(_text)
+		_text = utils.rmSpecialCharts(_text)
+		_text = _text.replace(" ", "").lower()
+		_text = utils.tFrm( _text )
+		return _text
+
+	def __searchProgram(self, _title, _desc):
+		_title = self.__tFrm(_title)
+		_desc = self.__tFrm(_desc)
+		slug = ''
+		tSeri = ''
+		if self._series == '':
+			self._series = self._oOptions.getSeries()
+		for serie in self._series:
+			title = self.__tFrm(serie['title'])
+			if title == _title:
+				tSeri = title
+				slug = str(serie['slug'])
+				break
+		resp = ''
+		if slug != '':
+			if self._slug != slug:
+				self._slug = slug
+				self._episodes = self._oOptions.getEpisodes(self._slug)
+			
+			for episode in self._episodes:
+				eTitle = episode['title']
+				efTitle = self.__tFrm(eTitle)
+				desc = episode['description']
+				if efTitle == _desc:
+					epiNumber = episode['episodeNumber']
+					season = episode['seasonNumber']
+					nTitle = "[T{0}E{1}] {2}".format(season, epiNumber, eTitle)
+					icon = ''
+					if 'poster' in episode and episode['poster'] is not None:
+						icon = episode['poster']['src']
+					resp = {'icon': icon, 'media': self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )}
+					break
+		return resp
+
+	def __loadOldGuides(self):
+		programDates = self._oOptions.getOldPrograms()
+		for program in programDates:
+			date = str(program)
+			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
+			self.__addItemMenu(date, '', '', openUrl, 'false', True)
+
+	def __loadNewGuides(self):
+		programDates = self._oOptions.getNewPrograms()
+		for program in programDates:
+			date = str(program)
+			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
+			self.__addItemMenu(date, '', '', openUrl, 'false', True)
+
+	def __loadGuide(self, _date=''):
+		programList = self._oOptions.getProgramList(_date)
+		autoSearch = self._oOptions.getAutoSearchValue()
 		for program in programList:
-			title = program['title']
-			icon = program['icon']
-			desc = program['desc']
-			internalUrl = self.__buildUrl({})
-			self.__addItemMenu(title, icon, internalUrl, 'false', False)
+			title = str(program['title'])
+			icon = str(program['icon'])
+			desc = str(program['desc'])
+			time = str(program['time'])
+			openUrl = self.__buildUrl({})
+
+			if autoSearch:
+				direct = self.__searchProgram(str(program['oTitle']), str(program['oDesc']))
+				if direct != '':
+					openUrl = direct['media']
+					icon = str(direct['icon'])
+			self.__addItemMenu( utils.tFrm(title) , time, icon, openUrl, 'false', False)
 
 	def __loadOptLive(self):
 		landscape = self._oOptions.getLandscape()
 		title = '[Directo] (Live)' + landscape['title']
 		icon = landscape['icon']
-		internalUrl = self.__buildUrl( {'action': 'live'} )
-		self.__addItemMenu(title, icon, internalUrl, 'false', False)
+		openUrl = self.__buildUrl( {'action': 'live'} )
+		self.__addItemMenu(title,'', icon, openUrl, 'false', False)
 
 	def __loadSeries(self):
-		series = self._oOptions.getSeries()
-		ordeSeries = sorted(series, key=self.__getTitle)
+		if self._series == '':
+			self._series = self._oOptions.getSeries()
+		ordeSeries = sorted(self._series, key=self.__getTitle)
 		for serie in ordeSeries:
 			title = str(serie['title'])
 			subtitle = serie['subtitle']
 			landscape = serie['metaMedia'][0]['media']['url']
 			portrait = serie['metaMedia'][1]['media']['url']
 			openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug'])} )
-			self.__addItemMenu(title, portrait, openUrl, 'false', True)
+			self.__addItemMenu(title, subtitle, portrait, openUrl, 'false', True)
 
 	def __loadSeasons(self, _slug):
 		episodes = self._oOptions.getEpisodes(_slug)
@@ -69,10 +140,10 @@ class nav:
 			if season not in seasons:
 				nTitle = 'Temporada ' + str(season)
 				icon = ''
-				if episode['poster']:
+				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
-				internalUrl = self.__buildUrl( {'action': 'episodes', 'slug': str(_slug), 'season': str(season) } )
-				self.__addItemMenu(nTitle, icon, internalUrl, 'false', True)
+				openUrl = self.__buildUrl( {'action': 'episodes', 'slug': str(_slug), 'season': str(season) } )
+				self.__addItemMenu(nTitle, '', icon, openUrl, 'false', True)
 				seasons.append(season)
 
 	def __loadEpisodes(self, _slug, _season):
@@ -86,14 +157,14 @@ class nav:
 				epiNumber = episode['episodeNumber']
 				nTitle = "[T{0}E{1}] {2}".format(season, epiNumber, title)
 				icon = ''
-				if episode['poster']:
-					icon = str(episode['poster']['src'])
-				internalUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
-				self.__addItemMenu(nTitle, icon, internalUrl, 'false', False)
+				if 'poster' in episode and episode['poster'] is not None:
+					icon = episode['poster']['src']
+				openUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
+				self.__addItemMenu(nTitle, desc, icon, openUrl, 'false', False)
 
 	def start(self):
-		self.__loadOptLive()
 		self.__loadOptGuide()
+		self.__loadOptLive()
 		self.__loadSeries()
 		xbmcplugin.endOfDirectory(self._handle)
 
@@ -105,6 +176,10 @@ class nav:
 		self.__loadEpisodes(_slug, _season)
 		xbmcplugin.endOfDirectory(self._handle)
 
-	def loadGuide(self):
-		self.__loadGuide()
+	def loadGuide(self, _date=''):
+		if _date == '':
+			self.__loadNewGuides()
+			self.__loadOldGuides()
+		else:
+			self.__loadGuide(_date)
 		xbmcplugin.endOfDirectory(self._handle)

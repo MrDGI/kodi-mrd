@@ -31,7 +31,9 @@ def main():
 			slug = str(args['slug'][0])
 			title = str(args['title'][0])
 			desc = str(args['desc'][0])
-			icon = str(args['icon'][0])
+			icon = ''
+			if 'icon' in args:
+				icon = str(args['icon'][0])
 			oMedia.play(slug, title, desc, icon)
 
 		elif type[0] == 'live':
@@ -39,6 +41,10 @@ def main():
 			
 		elif type[0] == 'guide':
 			oMenu.loadGuide()
+
+		elif type[0] == 'other-guide':
+			slug = str(args['slug'][0])
+			oMenu.loadGuide(slug)
 
 	except Exception as e:
 		media.log(e)

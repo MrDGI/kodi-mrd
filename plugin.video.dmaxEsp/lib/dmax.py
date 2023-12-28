@@ -1,3 +1,4 @@
+import xbmcaddon
 from lib import utils
 
 class Dmax:
@@ -5,6 +6,16 @@ class Dmax:
 		self._token = self.__getToken()
 		self._programList = self.__getLastPrograms()
 		self._landscape = self.__getLandscape(0)
+		self._addon = xbmcaddon.Addon()
+
+	def __getSettingString(self, _name):
+		return self._addon.getSettings(_name)
+
+	def __getSettingInt(self, _name):
+		return self._addon.getSettingInt(_name)
+
+	def __getSettingBool(self, _name):
+		return self._addon.getSettingBool(_name)
 
 	def __getToken(self):
 		try:
@@ -14,22 +25,24 @@ class Dmax:
 		except:
 			raise Exception('dmax -> getToken --- Error')
 
-	def __getLastPrograms(self):
+	def __getLastPrograms(self, _date=''):
 		try:
-			sChannel = utils.getHTML('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria')
+			if _date != '':
+				_date = '?date=' + _date
+			sChannel = utils.getHTML('https://d3ikde5w5w939x.cloudfront.net/programacion/diaria' + _date)
 			programList = utils.findAll('<ul class="programas">(.*?)</ul>', sChannel)
 			return programList
 		except:
 			raise Exception('dmax -> getLastPrograms --- Error')
 		
-	def __getItemObject(self, _item):
+	def __getItemObject(self, _item, _date=''):
 
 			incTimeRate = 120 # Represents the time rate to increase (on seconds) before consulting the guide again			
 
 			hour = utils.findAll('<span class="tiempo">(.*?)</span>', _item)
 			time = utils.findAll('<span class="duracion">(.*?)</span>', _item)
-			title = utils.findAll('<h3>(.*?)</h3>', _item)
-			episode = utils.findAll('<p class="episode">(.*?)</p>', _item)
+			title = utils.tFrm( utils.findAll('<h3>(.*?)</h3>', _item).strip() )
+			episode = utils.tFrm( utils.findAll('<p class="episode">(.*?)</p>', _item).strip() )
 			hTitle  = title + " - " + episode
 			sinopsis = utils.findAll('<div class="sinopsis">(.*?)</div>', _item)
 			pegi = utils.findAll('<div class="ico_edad calif_(.*?)" ', _item)
@@ -39,7 +52,7 @@ class Dmax:
 			addMins = int(time.split()[0])
 			initHour = int(hour.split(':')[0])
 			initMin = int(hour.split(':')[1])
-			initProgram = utils.getDate(initHour, initMin)
+			initProgram = utils.getDate(initHour, initMin, _date)
 
 			endProgram = utils.setMinuts(initProgram, addMins)
 
@@ -54,16 +67,17 @@ class Dmax:
 			descSinopsis = "\n[B][COLOR white]" + sinopsis + "[/COLOR][/B]"
 			description =  descTitle + descTime + descSinopsis
 
-			return {'icon': image, 'title': hTitle, 'desc': description, 'timeout': resto}
+			return {'icon': image, 'title': hTitle, 'desc': description, 'time': descTime, 'timeout': resto, 'oTitle': title, 'oDesc': episode}
 
-	def __getProgramItems(self, reload=0):
-		if reload:
-			self._programList = self.__getLastPrograms()
-		programItems = utils.findAll('<li class="programa">(.*?)</li>', self._programList, True)
+	def __getProgramItems(self, _date=''):
+		dateProgramList = self._programList
+		if _date != '':
+			dateProgramList = self.__getLastPrograms(_date)
+		programItems = utils.findAll('<li class="programa">(.*?)</li>', dateProgramList, True)
 
 		programList = []
 		for program in programItems:
-			landscape = self.__getItemObject(program)
+			landscape = self.__getItemObject(program, _date)
 			programList.append(landscape)
 		return programList
 
@@ -119,6 +133,16 @@ class Dmax:
 	def getLandscape(self):
 		return self._landscape
 
-	def getProgramList(self):
-		return self.__getProgramItems(0)
+	def getOldPrograms(self):
+		numDays = self.__getSettingInt('guideOldDates')
+		return utils.getOldDates(numDays)
+
+	def getNewPrograms(self):
+		return utils.getLastDates()
+
+	def getProgramList(self, _date=''):
+		return self.__getProgramItems(_date)
+
+	def getAutoSearchValue(self):
+		return self.__getSettingBool('searchGuidePrograms')
 		
