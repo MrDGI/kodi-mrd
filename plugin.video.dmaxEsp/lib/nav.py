@@ -129,10 +129,10 @@ class nav:
 			subtitle = serie['subtitle']
 			landscape = serie['metaMedia'][0]['media']['url']
 			portrait = serie['metaMedia'][1]['media']['url']
-			openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug'])} )
+			openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug']), 'wallpaper': landscape} )
 			self.__addItemMenu(title, subtitle, portrait, landscape, openUrl, 'false', True)
 
-	def __loadSeasons(self, _slug):
+	def __loadSeasons(self, _slug, _wallpaper=''):
 		episodes = self._oOptions.getEpisodes(_slug)
 		orderEpisodes = sorted(episodes, key=self.__getTempEpi)
 		seasons = []
@@ -143,11 +143,11 @@ class nav:
 				icon = ''
 				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
-				openUrl = self.__buildUrl( {'action': 'episodes', 'slug': str(_slug), 'season': str(season) } )
-				self.__addItemMenu(nTitle, '', icon, '', openUrl, 'false', True)
+				openUrl = self.__buildUrl( {'action': 'episodes', 'slug': str(_slug), 'season': str(season), 'wallpaper': _wallpaper } )
+				self.__addItemMenu(nTitle, '', icon, _wallpaper, openUrl, 'false', True)
 				seasons.append(season)
 
-	def __loadEpisodes(self, _slug, _season):
+	def __loadEpisodes(self, _slug, _season, _wallpaper=''):
 		episodes = self._oOptions.getEpisodes(_slug)
 		orderEpisodes = sorted(episodes, key=self.__getTempEpi)
 		for episode in orderEpisodes:
@@ -161,7 +161,7 @@ class nav:
 				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
 				openUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
-				self.__addItemMenu(nTitle, desc, icon, '', openUrl, 'false', False)
+				self.__addItemMenu(nTitle, desc, icon, _wallpaper, openUrl, 'false', False)
 
 	def start(self):
 		self.__loadOptGuide()
@@ -169,12 +169,12 @@ class nav:
 		self.__loadSeries()
 		xbmcplugin.endOfDirectory(self._handle)
 
-	def loadSeasions(self, _slug):
-		self.__loadSeasons(_slug)
+	def loadSeasions(self, _slug, _wallpaper=''):
+		self.__loadSeasons(_slug, _wallpaper)
 		xbmcplugin.endOfDirectory(self._handle)
 
-	def loadEpisodes(self, _slug, _season):
-		self.__loadEpisodes(_slug, _season)
+	def loadEpisodes(self, _slug, _season, _wallpaper=''):
+		self.__loadEpisodes(_slug, _season, _wallpaper)
 		xbmcplugin.endOfDirectory(self._handle)
 
 	def loadGuide(self, _date=''):

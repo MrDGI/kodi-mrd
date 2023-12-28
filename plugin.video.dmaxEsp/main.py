@@ -20,12 +20,16 @@ def main():
 
 		elif type[0] == 'seasons':
 			slug = str(args['slug'][0])
-			oMenu.loadSeasions(slug)
+			wallpaper = str(args['wallpaper'][0])
+			oMenu.loadSeasions(slug, wallpaper)
 
 		elif type[0] == 'episodes':
 			slug = str(args['slug'][0])
 			season = str(args['season'][0])
-			oMenu.loadEpisodes(slug, season)
+			wallpaper = ''
+			if 'wallpaper' in args:
+				wallpaper = str(args['wallpaper'][0])
+			oMenu.loadEpisodes(slug, season, wallpaper)
 
 		elif type[0] == 'episode':
 			slug = str(args['slug'][0])
@@ -34,7 +38,10 @@ def main():
 			icon = ''
 			if 'icon' in args:
 				icon = str(args['icon'][0])
-			oMedia.play(slug, title, desc, icon)
+			wallpaper = ''
+			if 'wallpaper' in args:
+				wallpaper = str(args['wallpaper'][0])
+			oMedia.play(slug, title, desc, icon, wallpaper)
 
 		elif type[0] == 'live':
 			oMedia.play()
