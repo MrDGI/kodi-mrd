@@ -13,13 +13,13 @@ class nav:
 		self._slug = ''
 		self._episodes = ''
          
-	def __addItemMenu(self, _title, _desc, _thumbnail, _url, _isPlayable='false', _isFolder=False):
+	def __addItemMenu(self, _title, _desc, _thumbnail, _wallpaper, _url, _isPlayable='false', _isFolder=False):
 		if _title is None:
 			_title = _desc.replace('\n', '')
 		if _title is not None and _desc is not None:
 			_title = _title + ": " + _desc.replace('\n', '')
 		newItem = xbmcgui.ListItem(_title)
-		newItem.setArt({ 'thumb': _thumbnail})
+		newItem.setArt({ 'title': _title, 'thumb': _thumbnail, 'poster': _thumbnail, 'fanart': _wallpaper, 'banner': _wallpaper })
 		newItem.setProperty('IsPlayable', _isPlayable)
 		newItem.setIsFolder(_isFolder)
 		xbmcplugin.addDirectoryItem(self._handle, listitem=newItem, url=_url, isFolder=_isFolder)
@@ -38,7 +38,7 @@ class nav:
 	def __loadOptGuide(self):
 		title = "[Guia] (Guide)"
 		openUrl = self.__buildUrl( {'action': 'guide'} )
-		self.__addItemMenu(title, '', '', openUrl, 'false', True)
+		self.__addItemMenu(title, '', '', '', openUrl, 'false', True)
 
 	def __tFrm(self, _text):
 		_text = str(_text)
@@ -51,14 +51,14 @@ class nav:
 		_title = self.__tFrm(_title)
 		_desc = self.__tFrm(_desc)
 		slug = ''
-		tSeri = ''
+		landscape = ''
 		if self._series == '':
 			self._series = self._oOptions.getSeries()
 		for serie in self._series:
 			title = self.__tFrm(serie['title'])
 			if title in _title:
-				tSeri = title
 				slug = str(serie['slug'])
+				landscape = serie['metaMedia'][0]['media']['url']
 				break
 		resp = ''
 		if slug != '':
@@ -77,7 +77,7 @@ class nav:
 					icon = ''
 					if 'poster' in episode and episode['poster'] is not None:
 						icon = episode['poster']['src']
-					resp = {'icon': icon, 'media': self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )}
+					resp = {'icon': icon, 'wallpaper': landscape, 'media': self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )}
 					break
 		return resp
 
@@ -86,14 +86,14 @@ class nav:
 		for program in programDates:
 			date = str(program)
 			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
-			self.__addItemMenu(date, '', '', openUrl, 'false', True)
+			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
 
 	def __loadNewGuides(self):
 		programDates = self._oOptions.getNewPrograms()
 		for program in programDates:
 			date = str(program)
 			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
-			self.__addItemMenu(date, '', '', openUrl, 'false', True)
+			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
 
 	def __loadGuide(self, _date=''):
 		programList = self._oOptions.getProgramList(_date)
@@ -104,20 +104,21 @@ class nav:
 			desc = str(program['desc'])
 			time = str(program['time'])
 			openUrl = self.__buildUrl({})
-
+			wallpaper = ''
 			if autoSearch:
 				direct = self.__searchProgram(str(program['oTitle']), str(program['oDesc']))
 				if direct != '':
 					openUrl = direct['media']
 					icon = str(direct['icon'])
-			self.__addItemMenu( utils.tFrm(title) , time, icon, openUrl, 'false', False)
+					wallpaper = str(direct['wallpaper'])
+			self.__addItemMenu( utils.tFrm(title) , time, icon, wallpaper, openUrl, 'false', False)
 
 	def __loadOptLive(self):
 		landscape = self._oOptions.getLandscape()
 		title = '[Directo] (Live)' + landscape['title']
 		icon = landscape['icon']
 		openUrl = self.__buildUrl( {'action': 'live'} )
-		self.__addItemMenu(title,'', icon, openUrl, 'false', False)
+		self.__addItemMenu(title,'', icon, '', openUrl, 'false', False)
 
 	def __loadSeries(self):
 		if self._series == '':
@@ -129,7 +130,7 @@ class nav:
 			landscape = serie['metaMedia'][0]['media']['url']
 			portrait = serie['metaMedia'][1]['media']['url']
 			openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug'])} )
-			self.__addItemMenu(title, subtitle, portrait, openUrl, 'false', True)
+			self.__addItemMenu(title, subtitle, portrait, landscape, openUrl, 'false', True)
 
 	def __loadSeasons(self, _slug):
 		episodes = self._oOptions.getEpisodes(_slug)
@@ -143,7 +144,7 @@ class nav:
 				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
 				openUrl = self.__buildUrl( {'action': 'episodes', 'slug': str(_slug), 'season': str(season) } )
-				self.__addItemMenu(nTitle, '', icon, openUrl, 'false', True)
+				self.__addItemMenu(nTitle, '', icon, '', openUrl, 'false', True)
 				seasons.append(season)
 
 	def __loadEpisodes(self, _slug, _season):
@@ -160,7 +161,7 @@ class nav:
 				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
 				openUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
-				self.__addItemMenu(nTitle, desc, icon, openUrl, 'false', False)
+				self.__addItemMenu(nTitle, desc, icon, '', openUrl, 'false', False)
 
 	def start(self):
 		self.__loadOptGuide()
