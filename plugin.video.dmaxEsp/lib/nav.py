@@ -17,7 +17,7 @@ class nav:
 		if _title is None:
 			_title = _desc.replace('\n', '')
 		if _title is not None and _desc is not None:
-			_title = _title + ": " + _desc.replace('\n', '')
+			_title = _title + ": " + _desc.replace('\n', ' ').replace('\t', ' ')
 		newItem = xbmcgui.ListItem(_title)
 		newItem.setArt({ 'title': _title, 'thumb': _thumbnail, 'poster': _thumbnail, 'fanart': _wallpaper, 'banner': _wallpaper })
 		newItem.setProperty('IsPlayable', _isPlayable)
