@@ -1,6 +1,3 @@
-# plugin.video.dmaxEsp
-DMAX Esp add-on for Kodi
-
 # Disclaimer
 This addon is unofficial and not supported by Discovery Networks, so it may crash at any time.
 
@@ -8,6 +5,11 @@ This is provided as an educational basis for code review, at no time is it propo
 Which is why if you run this code is under your legal responsibility.
 The developer is not responsible for it.
 
+# plugin.video.dmaxEsp
+DMAX Esp add-on for Kodi
+
+# repository.mrd
+Mr.D repository for Kodi
 
 # Supported platforms
 - Linux
