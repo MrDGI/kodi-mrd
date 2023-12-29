@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="repository.mrd" name="Kodi Mr.D repository" version="0.0.1" provider-name="MrD">
-    <extension point="xbmc.addon.repository" name="Kodi Mr.D Repository">
+<addon id="repository.mrd" name="Mr.D repository" version="0.0.1" provider-name="MrD">
+    <extension point="xbmc.addon.repository" name="Mr.D Repository">
         <dir>
-            <info compressed="false">https://mrdgi.github.io/kodi-mrd/plugin.video.dmaxEsp/addon.xml</info>
-            <checksum>https://mrdgi.github.io/kodi-mrd/plugin.video.dmaxEsp/addon.xml.md5</checksum>
+            <info compressed="false">https://mrdgi.github.io/kodi-mrd/repository.mrd/addon.xml</info>
+            <checksum>https://mrdgi.github.io/kodi-mrd/repository.mrd/addon.xml.md5</checksum>
             <datadir zip="true">https://mrdgi.github.io/kodi-mrd/</datadir>
         </dir>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary>Mr.D Repository for Kodi 20</summary>
         <description>Mr.D Repository for Kodi 20 add-ons</description>
-        <disclaimer></disclaimer>
+        <disclaimer>
+			This addon is unofficial and not supported, so it may crash at any time.
+
+			This is provided as an educational basis for code review, at no time is it proposed for actual use given that the lines of code include third-party URLs whose use may not be permitted.
+			Which is why if you run this code is under your legal responsibility.
+			The developer is not responsible for it.
+		</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
