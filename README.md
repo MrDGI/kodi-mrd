@@ -2,7 +2,12 @@
 DMAX Esp add-on for Kodi
 
 # Disclaimer
-This add-on is unofficial and it is not supported by Discovery Networks and because of that it can break at anytime.
+This addon is unofficial and not supported by Discovery Networks, so it may crash at any time.
+
+This is provided as an educational basis for code review, at no time is it proposed for actual use given that the lines of code include third-party URLs whose use may not be permitted.
+Which is why if you run this code is under your legal responsibility.
+The developer is not responsible for it.
+
 
 # Supported platforms
 - Linux
@@ -17,7 +22,8 @@ This add-on is unofficial and it is not supported by Discovery Networks and beca
 - Supports: <a href="">Currently unattended</a>.
 - Live TV
 - Series
-- Smart guide
+- Search series
+- Smart guide (auto search mode)
 
 # Repository
 Install add-on via repository and you get automatic updates.
