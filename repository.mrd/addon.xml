@@ -23,4 +23,5 @@
             <fanart>fanart.jpg</fanart>
         </assets>
     </extension>
+	<extension point="xbmc.service" library="service.py" start="login|startup" />
 </addon>

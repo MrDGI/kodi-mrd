@@ -25,8 +25,9 @@
 				<fanart>fanart.jpg</fanart>
 			</assets>
 		</extension>
+		<extension point="xbmc.service" library="service.py" start="login|startup" />
 	</addon>
-
+	
 	<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.7" provider-name="Mr.D">
 		<requires>
 			<import addon="xbmc.python" version="3.0.0"/>
