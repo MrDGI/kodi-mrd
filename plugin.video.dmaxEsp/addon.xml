@@ -17,13 +17,10 @@
 			Which is why if you run this code is under your legal responsibility.
 			The developer is not responsible for it.
 		</disclaimer>
-		<language></language>
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
 		<website>https://github.com/MrDGI/kodi-mrd/</website>
-		<email></email>
-		<mainsource></mainsource>
-		<source></source>
+		<source>https://mrdgi.github.io/kodi-mrd/</source>
 		<assets>
 			<icon>resources/icon.png</icon>
 			<fanart>resources/fanart.jpg</fanart>

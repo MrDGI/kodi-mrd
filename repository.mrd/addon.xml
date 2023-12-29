@@ -10,6 +10,10 @@
     <extension point="xbmc.addon.metadata">
         <summary>Mr.D Repository for Kodi 20</summary>
         <description>Mr.D Repository for Kodi 20 add-ons</description>
+		<platform>all</platform>
+		<license>GNU GPL v3</license>
+		<website>https://github.com/MrDGI/kodi-mrd/</website>
+		<source>https://mrdgi.github.io/kodi-mrd/</source>
         <disclaimer>
 			This addon is unofficial and not supported, so it may crash at any time.
 
@@ -17,7 +21,6 @@
 			Which is why if you run this code is under your legal responsibility.
 			The developer is not responsible for it.
 		</disclaimer>
-        <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <addons>
-
 	<addon id="repository.mrd" name="Mr.D repository" version="0.0.1" provider-name="Mr.D">
 		<extension point="xbmc.addon.repository" name="Mr.D Repository">
 			<dir>
@@ -12,6 +11,10 @@
 		<extension point="xbmc.addon.metadata">
 			<summary>Mr.D Repository for Kodi 20</summary>
 			<description>Mr.D Repository for Kodi 20 add-ons</description>
+			<platform>all</platform>
+			<license>GNU GPL v3</license>
+			<website>https://github.com/MrDGI/kodi-mrd/</website>
+			<source>https://mrdgi.github.io/kodi-mrd/</source>
 			<disclaimer>
 				This addon is unofficial and not supported, so it may crash at any time.
 
@@ -19,7 +22,6 @@
 				Which is why if you run this code is under your legal responsibility.
 				The developer is not responsible for it.
 			</disclaimer>
-			<platform>all</platform>
 			<assets>
 				<icon>icon.png</icon>
 				<fanart>fanart.jpg</fanart>
@@ -27,7 +29,6 @@
 		</extension>
 		<extension point="xbmc.service" library="service.py" start="login|startup" />
 	</addon>
-	
 	<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.7" provider-name="Mr.D">
 		<requires>
 			<import addon="xbmc.python" version="3.0.0"/>
@@ -46,13 +47,10 @@
 				Which is why if you run this code is under your legal responsibility.
 				The developer is not responsible for it.
 			</disclaimer>
-			<language></language>
 			<platform>all</platform>
 			<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
 			<website>https://github.com/MrDGI/kodi-mrd/</website>
-			<email></email>
-			<mainsource></mainsource>
-			<source></source>
+			<source>https://mrdgi.github.io/kodi-mrd/</source>
 			<assets>
 				<icon>resources/icon.png</icon>
 				<fanart>resources/fanart.jpg</fanart>
@@ -80,5 +78,4 @@
 			</news>
 		</extension>
 	</addon>
-
 </addons>
