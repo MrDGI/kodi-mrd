@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="repository.mrd" name="Mr.D repository" version="0.0.1" provider-name="MrDGI">
+<addon id="repository.mrd" name="Mr.D repository" version="0.0.1" provider-name="Mr.D">
     <extension point="xbmc.addon.repository" name="Mr.D Repository">
         <dir>
-            <info compressed="false">https://mrdgi.github.io/kodi-mrd/repository.mrd/addon.xml</info>
-            <checksum>https://mrdgi.github.io/kodi-mrd/repository.mrd/addon.xml.md5</checksum>
+            <info compressed="false">https://mrdgi.github.io/kodi-mrd/addons.xml</info>
+            <checksum>https://mrdgi.github.io/kodi-mrd/addons.xml.md5</checksum>
             <datadir zip="true">https://github.com/MrDGI/kodi-mrd/</datadir>
         </dir>
     </extension>
