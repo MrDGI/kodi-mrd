@@ -32,7 +32,7 @@ def fSeconds(_seconds):
 	return int(str( (_seconds / 60) ).split(".")[0])
 
 def fDate(_date):
-	return _date.strftime('%d/%m/%Y %H:%M')
+	return _date.strftime('%H:%M')
 
 def getLastDates(_numDays=2):
 	dates = []

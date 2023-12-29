@@ -34,11 +34,6 @@ class nav:
 	
 	def __buildUrl(self, _query):
 		return self._urlBase + '?' + urllib.urlencode(_query)
-	
-	def __loadOptGuide(self):
-		title = "[Guia] (Guide)"
-		openUrl = self.__buildUrl( {'action': 'guide'} )
-		self.__addItemMenu(title, '', '', '', openUrl, 'false', True)
 
 	def __tFrm(self, _text):
 		_text = str(_text)
@@ -47,9 +42,8 @@ class nav:
 		_text = utils.tFrm( _text )
 		return _text
 
-	def __searchProgram(self, _title, _desc):
+	def __searchSerie(self, _title):
 		_title = self.__tFrm(_title)
-		_desc = self.__tFrm(_desc)
 		slug = ''
 		landscape = ''
 		if self._series == '':
@@ -60,6 +54,14 @@ class nav:
 				slug = str(serie['slug'])
 				landscape = serie['metaMedia'][0]['media']['url']
 				break
+		return {'slug': slug, 'landscape': landscape}
+
+	def __searchProgram(self, _title, _desc):
+		_desc = self.__tFrm(_desc)
+		serie = self.__searchSerie(_title)
+		slug = serie['slug']
+		landscape = serie['landscape']
+
 		resp = ''
 		if slug != '':
 			if self._slug != slug:
@@ -81,20 +83,6 @@ class nav:
 					break
 		return resp
 
-	def __loadOldGuides(self):
-		programDates = self._oOptions.getOldPrograms()
-		for program in programDates:
-			date = str(program)
-			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
-			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
-
-	def __loadNewGuides(self):
-		programDates = self._oOptions.getNewPrograms()
-		for program in programDates:
-			date = str(program)
-			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date})
-			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
-
 	def __loadGuide(self, _date=''):
 		programList = self._oOptions.getProgramList(_date)
 		autoSearch = self._oOptions.getAutoSearchValue()
@@ -113,24 +101,70 @@ class nav:
 					wallpaper = str(direct['wallpaper'])
 			self.__addItemMenu( utils.tFrm(title) , time, icon, wallpaper, openUrl, 'false', False)
 
+	def __searchNotResults(self):
+		openUrl = self.__buildUrl({})
+		self.__addItemMenu('Your search did not match any serie )', '', '', '', openUrl, 'false', False)
+
+	def __searchSeries(self):
+		dialog = xbmcgui.Dialog()
+		data = dialog.input('Search in title', type=xbmcgui.INPUT_ALPHANUM)
+		if data is None or data == '':
+			self.start()
+		else:
+			self.loadSeries(data)
+
+	def __loadOldGuides(self):
+		programDates = self._oOptions.getOldPrograms()
+		for program in programDates:
+			date = str(program)
+			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date })
+			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
+
+	def __loadNewGuides(self):
+		programDates = self._oOptions.getNewPrograms()
+		for program in programDates:
+			date = str(program)
+			openUrl = self.__buildUrl({'action': 'other-guide', 'slug': date })
+			self.__addItemMenu(date, '', '', '', openUrl, 'false', True)
+	
+	def __loadOptGuide(self):
+		title = "[Guia] (Guide)"
+		openUrl = self.__buildUrl( {'action': 'guide' } )
+		self.__addItemMenu(title, '', '', '', openUrl, 'false', True)
+
 	def __loadOptLive(self):
 		landscape = self._oOptions.getLandscape()
 		title = '[Directo] (Live) ' + landscape['title']
 		icon = landscape['icon']
 		openUrl = self.__buildUrl( {'action': 'live'} )
 		self.__addItemMenu(title,'', icon, '', openUrl, 'false', False)
+	
+	def __loadOptSeries(self):
+		title = "Series"
+		openUrl = self.__buildUrl( {'action': 'series' } )
+		self.__addItemMenu(title, '', '', '', openUrl, 'false', True)
 
-	def __loadSeries(self):
+	def __loadOptSearchSeries(self):
+		title = "[Buscar] (Search) Series"
+		openUrl = self.__buildUrl( {'action': 'search-series' } )
+		self.__addItemMenu(title, '', '', '', openUrl, 'false', True)
+
+	def __loadSeries(self, _title=''):
+		resp = False
+		_title = self.__tFrm(_title)
 		if self._series == '':
 			self._series = self._oOptions.getSeries()
 		ordeSeries = sorted(self._series, key=self.__getTitle)
 		for serie in ordeSeries:
 			title = str(serie['title'])
-			subtitle = serie['subtitle']
-			landscape = serie['metaMedia'][0]['media']['url']
-			portrait = serie['metaMedia'][1]['media']['url']
-			openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug']), 'wallpaper': landscape} )
-			self.__addItemMenu(title, subtitle, portrait, landscape, openUrl, 'false', True)
+			if _title in self.__tFrm(title):
+				subtitle = serie['subtitle']
+				landscape = serie['metaMedia'][0]['media']['url']
+				portrait = serie['metaMedia'][1]['media']['url']
+				openUrl = self.__buildUrl( {'action': 'seasons', 'slug': str(serie['slug']), 'wallpaper': landscape } )
+				self.__addItemMenu(title, subtitle, portrait, landscape, openUrl, 'false', True)
+				resp = True
+		return resp
 
 	def __loadSeasons(self, _slug, _wallpaper=''):
 		episodes = self._oOptions.getEpisodes(_slug)
@@ -160,13 +194,25 @@ class nav:
 				icon = ''
 				if 'poster' in episode and episode['poster'] is not None:
 					icon = episode['poster']['src']
-				openUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon} )
+				openUrl = self.__buildUrl( {'action': 'episode', 'slug': str(episode['id']), 'title': nTitle, 'desc': desc, 'icon': icon } )
 				self.__addItemMenu(nTitle, desc, icon, _wallpaper, openUrl, 'false', False)
 
 	def start(self):
 		self.__loadOptGuide()
 		self.__loadOptLive()
-		self.__loadSeries()
+		self.__loadOptSearchSeries()
+		self.__loadOptSeries()
+		xbmcplugin.endOfDirectory(self._handle)
+
+	def loadSeries(self, _title=''):
+		self.__loadOptSearchSeries()
+		results = self.__loadSeries(_title)
+		if results == False:
+			self.__searchNotResults()
+		xbmcplugin.endOfDirectory(self._handle)
+
+	def searchSeries(self):
+		self.__searchSeries()
 		xbmcplugin.endOfDirectory(self._handle)
 
 	def loadSeasions(self, _slug, _wallpaper=''):

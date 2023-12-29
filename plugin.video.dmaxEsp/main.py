@@ -7,12 +7,14 @@ from urllib.parse import parse_qs
 def main():
 	try:
 		args = parse_qs(sys.argv[2][1:])
+		type = None
+
+
 		oOptions = dmax.Dmax()
 		oMedia = media.Media(oOptions)
 		oMenu = nav.nav(oOptions)
-		type = None
 
-		if len(args) > 0:
+		if 'action' in args:
 			type = args['action']
 
 		if type is None:
@@ -38,14 +40,17 @@ def main():
 			icon = ''
 			if 'icon' in args:
 				icon = str(args['icon'][0])
-			wallpaper = ''
-			if 'wallpaper' in args:
-				wallpaper = str(args['wallpaper'][0])
-			oMedia.play(slug, title, desc, icon, wallpaper)
+			oMedia.play(slug, title, desc, icon)
 
 		elif type[0] == 'live':
 			oMedia.play()
-			
+
+		elif type[0] == 'series':
+			oMenu.loadSeries()
+
+		elif type[0] == 'search-series':
+			oMenu.searchSeries()
+
 		elif type[0] == 'guide':
 			oMenu.loadGuide()
 
