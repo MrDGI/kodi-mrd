@@ -1,7 +1,6 @@
-@@ -1,24 +0,0 @@
 # -*- coding: UTF-8 -*-	
 
-import sys, os, xbmc	
+import sys, os, xbmc
 
 if sys.version_info[0] >= 3:	
     import xbmcvfs	
@@ -10,8 +9,7 @@ if sys.version_info[0] >= 3:
 else:	
     translatePath = xbmc.translatePath	
 
-
-addon_id = 'plugin.video.balandro'	
+addon_id = 'plugin.video.dmaxEsp'	
 
 install = False	
 
