@@ -27,7 +27,7 @@
 		</extension>
 		<extension point="xbmc.service" library="service.py" start="login|startup" />
 	</addon>
-	<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.7" provider-name="Mr.D">
+	<addon id="plugin.video.dmaxEsp" name="DMAX Spain" version="0.0.8" provider-name="Mr.D">
 		<requires>
 			<import addon="xbmc.python" version="3.0.0"/>
 			<import addon="script.module.requests" version="2.31.0" />
@@ -54,7 +54,9 @@
 				<fanart>resources/fanart.jpg</fanart>
 			</assets>
 			<news>
-				[B][COLOR orangered]Version 0.0.7  (29.12.2023)[/COLOR][/B]
+				[B][COLOR orangered]Version 0.0.8  (30.12.2023)[/COLOR][/B]
+				- corregido error en calculo de fechas para guia
+				[COLOR yellow]Version 0.0.7  (29.12.2023)[/COLOR]
 				- Corregido error reproduccion episodios.
 				- Aligerada carga inicial para series.
 				- Agregada opcion para buscar serie por contenido en titulo.

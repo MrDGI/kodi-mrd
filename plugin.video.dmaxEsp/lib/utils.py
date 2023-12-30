@@ -36,23 +36,19 @@ def fDate(_date):
 
 def getLastDates(_numDays=2):
 	dates = []
-	date = dateTime()
-	day = date.strftime("%d")
+	date = dateTime().replace(hour=0, minute=0, second=0, microsecond=0)
 	for i in range(0, (_numDays + 1)):
-		nDay = int(day) + i
-		nDate = date.replace(day=nDay, hour=0, minute=0, second=0, microsecond=0)
+		nDate = date + timedelta(days=i)
 		fDate = nDate.strftime('%Y-%m-%d')
 		dates.append(fDate)
 	return dates[::-1]
 
 def getOldDates(_numDays=30):
 	dates = []
-	date = dateTime()
-	day = date.strftime("%d")
+	date = dateTime().replace(hour=0, minute=0, second=0, microsecond=0)
 	for i in range(1, (_numDays + 1)):
-		nDay = int(day) + i
-		nDate = date - timedelta(days=i)
-		fDate = nDate.strftime('%Y-%m-%d')
+		nDay = date - timedelta(days=i)
+		fDate = nDay.strftime('%Y-%m-%d')
 		dates.append(fDate)
 	return dates
 
